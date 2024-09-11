@@ -11,11 +11,11 @@ import rembg
 class TwoStagePipeline(object):
     def __init__(
         self,
-        stage1_model_config,
+        # stage1_model_config,
         stage2_model_config,
         stage1_sampler_config,
         stage2_sampler_config,
-        device="cuda",
+        device="cpu",
         dtype=torch.float16,
         resize_rate=1,
     ) -> None:
@@ -26,22 +26,22 @@ class TwoStagePipeline(object):
         """
         self.resize_rate = resize_rate
 
-        self.stage1_model = instantiate_from_config(OmegaConf.load(stage1_model_config.config).model)
-        self.stage1_model.load_state_dict(torch.load(stage1_model_config.resume, map_location="cpu"), strict=False)
-        self.stage1_model = self.stage1_model.to(device).to(dtype)
+        # self.stage1_model = instantiate_from_config(OmegaConf.load(stage1_model_config.config).model)
+        # self.stage1_model.load_state_dict(torch.load(stage1_model_config.resume, map_location="cpu"), strict=False)
+        # self.stage1_model = self.stage1_model.to(device).to(dtype)
 
         self.stage2_model = instantiate_from_config(OmegaConf.load(stage2_model_config.config).model)
         sd = torch.load(stage2_model_config.resume, map_location="cpu")
         self.stage2_model.load_state_dict(sd, strict=False)
         self.stage2_model = self.stage2_model.to(device).to(dtype)
 
-        self.stage1_model.device = device
+        # self.stage1_model.device = device
         self.stage2_model.device = device
         self.device = device
         self.dtype = dtype
-        self.stage1_sampler = get_obj_from_str(stage1_sampler_config.target)(
-            self.stage1_model, device=device, dtype=dtype, **stage1_sampler_config.params
-        )
+        # self.stage1_sampler = get_obj_from_str(stage1_sampler_config.target)(
+        #     self.stage1_model, device=device, dtype=dtype, **stage1_sampler_config.params
+        # )
         self.stage2_sampler = get_obj_from_str(stage2_sampler_config.target)(
             self.stage2_model, device=device, dtype=dtype, **stage2_sampler_config.params
         )
@@ -132,12 +132,12 @@ class TwoStagePipeline(object):
 
     def __call__(self, pixel_img, prompt="3D assets", scale=5, step=50):
         pixel_img = do_resize_content(pixel_img, self.resize_rate)
-        stage1_images = self.stage1_sample(pixel_img, prompt, scale=scale, step=step)
+        # stage1_images = self.stage1_sample(pixel_img, prompt, scale=scale, step=step)
         stage2_images = self.stage2_sample(pixel_img, stage1_images, scale=scale, step=step)
 
         return {
             "ref_img": pixel_img,
-            "stage1_images": stage1_images,
+            # "stage1_images": stage1_images,
             "stage2_images": stage2_images,
         }
 
