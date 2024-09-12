@@ -139,11 +139,11 @@ stage2_model_config = stage2_config.models
 
 xyz_path = hf_hub_download(repo_id="Zhengyi/CRM", filename="ccm-diffusion.pth")
 pixel_path = hf_hub_download(repo_id="Zhengyi/CRM", filename="pixel-diffusion.pth")
-# stage1_model_config.resume = pixel_path
+stage1_model_config.resume = pixel_path
 stage2_model_config.resume = xyz_path
 
 pipeline = TwoStagePipeline(
-    # stage1_model_config,
+    stage1_model_config,
     stage2_model_config,
     stage1_sampler_config,
     stage2_sampler_config,
