@@ -253,8 +253,6 @@ seed = 1234
 guidance_scale = 5.5
 step = 50
 
-# Generación automática del modelo 3D al iniciar
-processed_image, np_xyzs, glb_path, obj_path = generate_3d_image(seed, guidance_scale, step)
 
 def expand_to_square(image, bg_color=(0, 0, 0, 0)):
     width, height = image.size
@@ -328,6 +326,7 @@ pipeline = TwoStagePipeline(stage1_model_config, stage2_model_config, stage1_sam
 # Cargar la imagen estática
 static_image = Image.open("image/imagen.png")
 
+
 def gen_image(input_image, seed, scale, step):
     global pipeline, model, args
     pipeline.set_seed(seed)
@@ -350,7 +349,11 @@ def generate_3d_image(seed, guidance_scale, step):
     
     # Retornar los resultados
     return processed_image, np_xyzs, glb_path, obj_path
-    
+
+
+# Generación automática del modelo 3D al iniciar
+processed_image, np_xyzs, glb_path, obj_path = generate_3d_image(seed, guidance_scale, step)
+
 # Configurar la interfaz de Gradio
 with gr.Blocks() as demo:
     gr.Markdown("# CRM: Single Image to 3D Textured Mesh")
