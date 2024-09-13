@@ -225,7 +225,7 @@ with gr.Blocks() as demo:
         inputs=inputs,
         outputs=outputs,
     )
-    demo.queue().launch()
+    demo.queue().launch(share=True)
 
 
 # import argparse
