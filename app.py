@@ -249,6 +249,19 @@ rembg_session = rembg.new_session()
 # Cargar la imagen estática
 static_image = Image.open("image/imagen.png")
 
+def gen_image(input_image, seed, scale, step):
+    global pipeline, model, args
+    pipeline.set_seed(seed)
+    rt_dict = pipeline(input_image, scale=scale, step=step)
+    stage1_images = rt_dict["stage1_images"]
+    stage2_images = rt_dict["stage2_images"]
+    np_imgs = np.concatenate(stage1_images, 1)
+    np_xyzs = np.concatenate(stage2_images, 1)
+
+    glb_path, obj_path = generate3d(model, np_imgs, np_xyzs, args.device)
+    return Image.fromarray(np_imgs), Image.fromarray(np_xyzs), glb_path, obj_path
+
+
 def generate_3d_image(seed, guidance_scale, step):
     # Procesar la imagen estática
     input_image = static_image
@@ -311,17 +324,6 @@ def preprocess_image(image, background_choice, foreground_ratio, backgroud_color
     image = add_background(image, backgroud_color)
     return image.convert("RGB")
 
-def gen_image(input_image, seed, scale, step):
-    global pipeline, model, args
-    pipeline.set_seed(seed)
-    rt_dict = pipeline(input_image, scale=scale, step=step)
-    stage1_images = rt_dict["stage1_images"]
-    stage2_images = rt_dict["stage2_images"]
-    np_imgs = np.concatenate(stage1_images, 1)
-    np_xyzs = np.concatenate(stage2_images, 1)
-
-    glb_path, obj_path = generate3d(model, np_imgs, np_xyzs, args.device)
-    return Image.fromarray(np_imgs), Image.fromarray(np_xyzs), glb_path, obj_path
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--stage1_config", type=str, default="configs/nf7_v3_SNR_rd_size_stroke.yaml", help="config for stage1")
