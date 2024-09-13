@@ -366,4 +366,4 @@ with gr.Blocks() as demo:
             output_model = gr.Model3D(value=glb_path, interactive=False, label="Output GLB")
             output_obj = gr.File(value=obj_path, interactive=False, label="Output OBJ")
 
-demo.launch()
+demo.launch(share=True)
