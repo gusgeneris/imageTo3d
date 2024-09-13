@@ -324,7 +324,7 @@ stage2_model_config.resume = xyz_path
 
 pipeline = TwoStagePipeline(stage1_model_config, stage2_model_config, stage1_sampler_config, stage2_sampler_config, device=args.device, dtype=torch.float16)
 # Cargar la imagen estática
-static_image = Image.open("image/imagen.png")
+static_image = Image.open("image/image2.jpg")
 
 
 def gen_image(input_image, seed, scale, step):
