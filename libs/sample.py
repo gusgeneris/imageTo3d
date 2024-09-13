@@ -163,7 +163,7 @@ class ImageDreamDiffusion:
             x_sample = model.decode_first_stage(samples_ddim)
             x_sample = torch.clamp((x_sample + 1.0) / 2.0, min=0.0, max=1.0)
             x_sample = 255.0 * x_sample.permute(0, 2, 3, 1).cpu().numpy()
-        print(x_sample)
+        # print(x_sample)
         return list(x_sample.astype(np.uint8))
 
     def diffuse(self, t, ip, n_test=2):
